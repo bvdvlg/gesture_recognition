@@ -1,20 +1,16 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from torch import nn
 import data
-import torch
 import image_container
 import time
 import os
 from models import XGBModel, FCModel, KNN, RandomForestModel
 import pandas as pd
 from tracker import Tracker, buffer_size
-from matplotlib import pyplot as plt
-from nltk.corpus import words
-from difflib import get_close_matches
+from text import Text
 
-proba_threshold = 0.6
+proba_threshold = 0.1
 
 
 def read_image(cap):
@@ -39,21 +35,20 @@ def make_prediction(model, lands):
     marks = pd.DataFrame(marks).transpose()
     probas = model.model.predict_proba(marks)
     out = np.argmax(probas[0])
-    return out, probas
+    return int(out), probas
 
 
 # Hand tracking model defining
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7, max_num_hands=1)
+hands = mp_hands.Hands(min_detection_confidence=0.3, min_tracking_confidence=0.7, max_num_hands=1)
 
 # Text, recognizer and dictionaries defining
-text = ""
+text = Text()
 xgb = XGBModel()
 xgb.load('xgb_model.pkl')
-dictionary = words.words()
 labels = {el.lower(): num for num, el in enumerate(sorted(os.listdir(image_container.dots_path)))}
-reversed_labels = {num: el.lower() for num, el in enumerate(sorted(os.listdir(image_container.dots_path)))}
+text.set_alphabets(labels)
 track = Tracker()
 counter = 0
 
@@ -88,23 +83,13 @@ while cap.isOpened():
             mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             if track.flag == 1:
                 out, probas = make_prediction(xgb, hand_landmarks.landmark)
-                sym = reversed_labels[int(out)]
+                sym = text.get_sym(out)
 
                 if probas[0][int(out)] > proba_threshold:
-                    text += sym if sym != "space" else " "
+                    text.append(sym)
                     track.flag = 0
-                    if sym == "space":
-                        words = text.split()
-                        if len(words) != 0:
-                            new_word = get_close_matches(words[-1], dictionary, n=1, cutoff=0.7)
-                            if new_word:
-                                new_word = str(new_word[0])
-                            else:
-                                new_word = words[-1]
-                            text = " ".join(words[:len(words) - 1] + [new_word]) + " "
-                    print(text)
 
-                image = cv2.putText(image, "{} {}".format(reversed_labels[int(out)],
+                image = cv2.putText(image, "{} {}".format(sym,
                                                           probas[0][int(out)]), (20, 70),
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (235, 22, 255), 4)
     image = cv2.putText(image, "fps: %.2f" % fps, (20, image.shape[1] - 200),
@@ -117,4 +102,4 @@ while cap.isOpened():
     start = time.time()
 hands.close()
 cap.release()
-print(text)
+print(text.text)
