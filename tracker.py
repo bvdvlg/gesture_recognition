@@ -4,9 +4,7 @@ from image_container import LandMarks, LandMark
 import numpy as np
 from tube import Tube
 import numpy.fft as fourier
-buffer_size = 10
-upper_threshhold = 6
-lower_threshhold = 0.8
+from image_container import Constants
 '''
 gesture can be recognized = 1
 gesture was read = 0
@@ -19,21 +17,23 @@ start_time = time()
 
 class Tracker:
     def __init__(self):
-        self.speed_hist = Tube.get_tube([0]*buffer_size)
+        self.speed_hist = Tube.get_tube([0]*Constants.buffer_size)
         self.last_time = time()
         self.counted_idx = [4, 3, 6, 8, 10, 12, 14, 16, 18, 20]
         self.flag = 0
         self.speed = list()
         self.weights = np.array([2, 2, 0.5]+[1]*27)
         self._num_counted = len(self.counted_idx)
+        self.delayer_flag = 0
+        self.update_delayed_flag()
         self.last_coordinates = np.array(self._num_counted*[0])#np.array(self._num_counted*3*[0])
 
     def update(self, landmarks):
         speed, vec_of_coords, new_time = self.get_speed(landmarks)
         speed = max(speed)
-        if self.flag == 0 and speed > upper_threshhold:
+        if self.flag == 0 and speed > Constants.Thresholds.upper_threshhold and self.delayer_flag == 0:
             self.flag = -1
-        if self.flag == -1 and speed < lower_threshhold:
+        if self.flag == -1 and speed < Constants.Thresholds.lower_threshhold:
             self.flag = 1
         self.speed_hist = self.speed_hist.pushed(speed)
         self.speed_hist.pop()
@@ -51,6 +51,10 @@ class Tracker:
         distances = [np.linalg.norm(used_lands[3*i:3*i+3]-zero_point)/dist for i in range(self._num_counted)]
         speed = (np.array(distances)-np.array(self.last_coordinates)) / (new_time - self.last_time)
         return np.abs(speed), distances, new_time
+
+    def update_delayed_flag(self):
+        self.delayer_flag = 3*Constants.buffer_size
+        self.flag = 0
 
     def ft(self):
         res = np.fft.fft(self.speed_hist.tolist())

@@ -8,6 +8,18 @@ images_path = "/home/bvdvlg/PycharmProjects/diplom/asl_alphabet_train/Training S
 dots_path = "/home/bvdvlg/PycharmProjects/diplom/asl_alphabet_train/asl_alphabet_train_dots"
 
 
+class Constants:
+    min_detection_confidence = 0.7
+    min_tracking_confidence = 0.7
+    buffer_size = 10
+
+    class Thresholds:
+        proba_threshold = 0.1
+        cutoff_threshold = 0.8
+        upper_threshhold = 4
+        lower_threshhold = 0.8
+
+
 class LandMark:
     def __init__(self, landmark=None, x=None, y=None, z=None):
         if landmark is None:

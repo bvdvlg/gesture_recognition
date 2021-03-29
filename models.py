@@ -8,6 +8,8 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
 from sklearn.ensemble import RandomForestClassifier
+import image_container
+import data
 
 
 class FCModel:
@@ -137,6 +139,20 @@ class XGBModel:
         with open(checkpoint_path, 'rb') as file:
             self.model = pickle.load(file)
         print('model loaded from %s' % checkpoint_path)
+
+    @staticmethod
+    def get_model(filename):
+        result = XGBModel()
+        result.load(filename)
+        return result
+
+    def lands2sym(self, lands):
+        marks = image_container.LandMarks(lands).landstovec()
+        marks = data.xgb_data_transformer(marks)
+        marks = pd.DataFrame(marks).transpose()
+        probas = self.model.predict_proba(marks)
+        out = np.argmax(probas[0])
+        return int(out), probas
 
 
 class KNN(XGBModel):
