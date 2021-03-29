@@ -7,7 +7,7 @@ import time
 import os
 from models import XGBModel, FCModel, KNN, RandomForestModel
 import pandas as pd
-from tracker import Tracker, buffer_size
+from tracker import Tracker
 from text import Text
 
 proba_threshold = 0.1
