@@ -26,7 +26,6 @@ class App:
         self.tracker = Tracker()
         self.photo = None
         self.GUI = gui_module.GUI(self, window, window_title)
-
         self.text.text += self.text.current_word
 
 
@@ -35,8 +34,8 @@ class VideoCapture:
         # Open the video source
         self.vid = cv2.VideoCapture(video_source)
         self.mp_drawing = mp.solutions.drawing_utils
-        self.hands = mp.solutions.hands.Hands(min_detection_confidence=Constants.min_detection_confidence,
-                                              min_tracking_confidence=Constants.min_tracking_confidence,
+        self.hands = mp.solutions.hands.Hands(min_detection_confidence=Constants.MIN_DETECTION_CONFIDENCE,
+                                              min_tracking_confidence=Constants.MIN_TRACKING_CONFIDENCE,
                                               max_num_hands=1)
 
         if not self.vid.isOpened():

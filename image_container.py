@@ -9,15 +9,17 @@ dots_path = "/home/bvdvlg/PycharmProjects/diplom/asl_alphabet_train/asl_alphabet
 
 
 class Constants:
-    min_detection_confidence = 0.7
-    min_tracking_confidence = 0.7
-    buffer_size = 10
+    MIN_DETECTION_CONFIDENCE = 0.7
+    MIN_TRACKING_CONFIDENCE = 0.7
+    BUFFER_SIZE = 10
 
     class Thresholds:
-        proba_threshold = 0.1
-        cutoff_threshold = 0.8
-        upper_threshhold = 4
-        lower_threshhold = 0.8
+        PROBA_TRESHOLD = 0.1
+        CUTOFF_TRESHOLD = 0.8
+        UPPER_TRESHOLD = 4
+        LOWER_THRESHOLD = 0.9
+        DELAY_TRESHOLD = 1.1
+        RECOG_THRESHOLD = 0.6
 
 
 class LandMark:

@@ -20,21 +20,21 @@ class GUI:
 
         label = tkinter.Label(self.window, text="upper_threshold")
         label.place(x=self.vid.width//2, y=10)
-        self.upper_theshold_label = ttk.Label(self.window, text=str(Constants.Thresholds.upper_threshhold))
+        self.upper_theshold_label = ttk.Label(self.window, text=str(Constants.Thresholds.UPPER_TRESHOLD))
         self.upper_theshold_label.place(x=self.vid.width-20, y=30)
 
         self.upper_scale = ttk.Scale(self.window, from_=1, to=30, command=self.upper_scaler, length=self.vid.width-30)
         self.upper_scale.place(x=10, y=30)
-        self.upper_scale.set(Constants.Thresholds.upper_threshhold)
+        self.upper_scale.set(Constants.Thresholds.UPPER_TRESHOLD)
 
         label = tkinter.Label(self.window, text="lower_threshold")
         label.place(x=self.vid.width // 2, y=50)
-        self.lower_theshold_label = ttk.Label(self.window, text=str(Constants.Thresholds.lower_threshhold))
+        self.lower_theshold_label = ttk.Label(self.window, text=str(Constants.Thresholds.LOWER_THRESHOLD))
         self.lower_theshold_label.place(x=self.vid.width-20, y=70)
 
         self.lower_scale = ttk.Scale(self.window, from_=0.1, to=10, command=self.lower_scaler, length=self.vid.width-30)
         self.lower_scale.place(x=10, y=70)
-        self.lower_scale.set(Constants.Thresholds.lower_threshhold)
+        self.lower_scale.set(Constants.Thresholds.LOWER_THRESHOLD)
 
         self.current_word_label = tkinter.Label(self.window, text="current word:")
         self.common_text_label = tkinter.Label(self.window, text="text:")
@@ -73,12 +73,12 @@ class GUI:
         self.t9label["text"] = "Yes" if self.app.text.use_t9 else "No"
 
     def upper_scaler(self, val):
-        Constants.Thresholds.upper_threshhold = float(val)
-        self.upper_theshold_label["text"] = "%.2f" % Constants.Thresholds.upper_threshhold
+        Constants.Thresholds.UPPER_TRESHOLD = float(val)
+        self.upper_theshold_label["text"] = "%.2f" % Constants.Thresholds.UPPER_TRESHOLD
 
     def lower_scaler(self, val):
-        Constants.Thresholds.lower_threshhold = float(val)
-        self.lower_theshold_label["text"] = "%.2f" % Constants.Thresholds.lower_threshhold
+        Constants.Thresholds.LOWER_THRESHOLD = float(val)
+        self.lower_theshold_label["text"] = "%.2f" % Constants.Thresholds.LOWER_THRESHOLD
 
     def update(self):
         # Get a frame from the video source
@@ -92,7 +92,7 @@ class GUI:
                 out, probas = self.app.model.lands2sym(marks.landmark)
                 sym = self.app.text.get_sym(out)
 
-                if probas[0][int(out)] > Constants.Thresholds.proba_threshold:
+                if probas[0][int(out)] > Constants.Thresholds.PROBA_TRESHOLD:
                     self.app.text.append(sym)
                     self.app.tracker.flag = 0
 

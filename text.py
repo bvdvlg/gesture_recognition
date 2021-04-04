@@ -31,7 +31,7 @@ class Text:
 
         last_word = list()
         if self.use_t9:
-            last_word = get_close_matches(self.current_word, self.english_dictionary, n=1, cutoff=Constants.Thresholds.cutoff_threshold)
+            last_word = get_close_matches(self.current_word, self.english_dictionary, n=1, cutoff=Constants.Thresholds.CUTOFF_TRESHOLD)
 
         if last_word:
             self.text += last_word[0]
