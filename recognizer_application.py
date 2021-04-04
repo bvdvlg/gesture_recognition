@@ -9,6 +9,7 @@ import data
 import image_container
 from image_container import Constants
 import os
+import json
 from models import XGBModel, FCModel, KNN, RandomForestModel
 import gui_module
 from tracker import Tracker
@@ -20,7 +21,8 @@ class App:
         self.video_source = video_source
         self.model = XGBModel.get_model('xgb_model.pkl')
         self.text = Text()
-        labels = {el.lower(): num for num, el in enumerate(sorted(os.listdir(image_container.dots_path)))}
+        with open('labels.json', 'r') as labels_file:
+            labels = json.load(labels_file)
         self.text.set_alphabets(labels)
         self.vid = VideoCapture(self.video_source)
         self.tracker = Tracker()

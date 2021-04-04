@@ -19,7 +19,7 @@ class Constants:
         UPPER_TRESHOLD = 4
         LOWER_THRESHOLD = 0.9
         DELAY_TRESHOLD = 1.1
-        RECOG_THRESHOLD = 0.6
+        RECOG_THRESHOLD = 0.3
 
 
 class LandMark:

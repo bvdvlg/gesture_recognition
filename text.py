@@ -1,4 +1,6 @@
 from nltk.corpus import words
+from nltk import download
+download('words')
 from difflib import get_close_matches
 from image_container import Constants
 
@@ -14,8 +16,6 @@ class Text:
 
     def set_alphabets(self, alphabet):
         self.alphabet = alphabet
-        self.alphabet[" "] = self.alphabet["space"]
-        del self.alphabet["space"]
         self.reversed_alphabet = {el: num for num, el in self.alphabet.items()}
 
     def get_sym(self, num):
