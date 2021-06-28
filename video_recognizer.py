@@ -35,6 +35,7 @@ def make_prediction(model, lands):
     marks = pd.DataFrame(marks).transpose()
     probas = model.model.predict_proba(marks)
     out = np.argmax(probas[0])
+    print(out)
     return int(out), probas
 
 

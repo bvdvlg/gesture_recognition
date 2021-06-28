@@ -9,12 +9,12 @@ dots_path = "/home/bvdvlg/PycharmProjects/diplom/asl_alphabet_train/asl_alphabet
 
 
 class Constants:
-    MIN_DETECTION_CONFIDENCE = 0.7
-    MIN_TRACKING_CONFIDENCE = 0.7
+    MIN_DETECTION_CONFIDENCE = 0.5
+    MIN_TRACKING_CONFIDENCE = 0.5
     BUFFER_SIZE = 10
 
     class Thresholds:
-        PROBA_TRESHOLD = 0.1
+        PROBA_TRESHOLD = 0.3
         CUTOFF_TRESHOLD = 0.8
         UPPER_TRESHOLD = 4
         LOWER_THRESHOLD = 0.9
@@ -92,11 +92,9 @@ class Image:
 
 
 def images_to_landmarks(impath=images_path, dotpath=dots_path):
-    mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands(
-        static_image_mode=True,
-        max_num_hands=1,
-        min_detection_confidence=0.5)
+    hands = mp.solutions.hands.Hands(min_detection_confidence=Constants.MIN_DETECTION_CONFIDENCE,
+                                          min_tracking_confidence=Constants.MIN_TRACKING_CONFIDENCE,
+                                          max_num_hands=2)
 
     suffixes = sorted(os.listdir(impath))
     log_file = "log.txt"

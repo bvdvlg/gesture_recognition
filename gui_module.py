@@ -56,7 +56,7 @@ class GUI:
         self.clear_button.place(x=400, y=550)
 
         # After it is called once, the update method will be automatically called every delay milliseconds
-        self.delay = 5
+        self.delay = 3
         self.update()
 
         self.window.mainloop()
@@ -88,9 +88,13 @@ class GUI:
             marks = marks[0]
             self.app.tracker.update(marks.landmark)
             self.vid.draw_landmarks(frame, marks)
+            out, probas = self.app.model.lands2sym(marks.landmark)
+            sym = self.app.text.get_sym(out)
+            self.vid.draw_sym(frame, sym)
             if self.app.tracker.flag == 1 and self.app.tracker.delayer_flag == 0:
                 out, probas = self.app.model.lands2sym(marks.landmark)
                 sym = self.app.text.get_sym(out)
+                self.vid.draw_sym(frame, sym)
 
                 if probas[0][int(out)] > Constants.Thresholds.PROBA_TRESHOLD:
                     self.app.text.append(sym)
@@ -105,6 +109,7 @@ class GUI:
             self.app.tracker.update_delayed_flag()
             self.app.text.current_word = ""
             self.current_word_label_info["text"] = self.app.text.current_word
+            self.common_text_label_info["text"] = self.app.text.text
 
         if ret:
             self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
